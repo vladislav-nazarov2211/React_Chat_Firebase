@@ -1,24 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter } from 'react-router-dom'
+import Navbar from './components/Navbar';
+import AppRouter from './components/AppRouter'
+import { useContext } from 'react';
+import { Context } from './index'
+import preloader from './img/preloader.svg'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { Container, Grid } from "@mui/material"
 
 function App() {
+  const {auth} = useContext(Context)
+  const [user, loading, error] = useAuthState(auth)
+
+  if (loading) {
+    return (
+        <Container>
+          <Grid container
+                    style={{height: window.innerHeight - 50}}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+          >
+            <img src={preloader} />
+          </Grid>
+        </Container>  
+    ) 
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <AppRouter />
+    </BrowserRouter>
   );
 }
 
